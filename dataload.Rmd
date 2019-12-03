@@ -1,0 +1,55 @@
+---
+title: "DataLoad"
+author: "R.M. Palmer"
+date: "11/15/2019"
+output: html_document
+---
+
+```{r dataload, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+
+```{r import_csv}
+# import raw data
+# want to have these as numeric for EDA
+train_raw <- read.csv('CaseStudy2-data.csv') %>% 
+  mutate(numeric_OverTime = as.integer(OverTime),
+        numeric_MaritalStatus = as.integer(MaritalStatus))
+
+
+# these are constant:
+#  Over18, StandardHours
+# these are redundant
+#  DailyRate, MonthlyRate, HourlyRate
+
+# identifiying:
+
+# ID
+# Attrition
+# EmployeeNumber
+
+# Factors:
+
+# BusinessTravel
+# Department
+# EducationField
+# Gender
+# JobRole
+# MaritalStatus
+## Over18
+# OverTime
+
+
+# Numeric:
+
+# Age
+# DailyRate
+# DistanceFromHome
+# Education
+# EmployeeCount
+# EnvironmentSatisfaction
+# HourlyRate
+
+```

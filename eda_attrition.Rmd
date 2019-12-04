@@ -11,28 +11,42 @@ library(gridExtra)
 library(grid)
 library(ggplot2)
 library(lattice)
-
 ```
 
 # EDA for predicting attrition
 
 ## Histogram of each numeric variable, distinguished by Attrition
 
-```{r}
+```{r def_hist_func}
 # convenience function
 attr_hist <- function(varname)
 {
   nbins <- 21
   index_1 <- which(colnames(employee_data)==varname)
   index_2 <- which(colnames(employee_data)=='Attrition')
-  two_cols <- employee_data %>% dplyr::select(index_1,index_2)
-  colnames(two_cols)  <- c('x','Attrition')
-  two_cols %>% ggplot(mapping=aes(x=x,y=..density..)) +
-      geom_histogram(bins=nbins) +
-      ggtitle(varname) +
-      facet_wrap(~Attrition)
+  
+  tmp_1 <- employee_data %>%
+      dplyr::select(index_1,index_2)
+  colnames(tmp_1)  <- c('x','Attrition')
+    
+  two_cols <- tmp_1 %>%
+      dplyr::group_by(Attrition) %>%
+      mutate(grp.mean = mean(x))
+  
+  summary(two_cols)
+  
+  two_cols %>% ggplot(mapping=aes(x=x,y=..density..,fill=Attrition,color=Attrition)) +
+      geom_histogram(bins=nbins,alpha=0.5) +
+      geom_vline(aes(xintercept=grp.mean,color=Attrition)) + 
+      ggtitle(varname) 
+  
+  #rm(tmp_1,two_cols)
+  #gc()
 }
 
+```
+
+```{r many_histograms}
 # histogram of each of the numeric predictors, separated by Attrition
 attr_hist('Age')
 attr_hist('DistanceFromHome')
